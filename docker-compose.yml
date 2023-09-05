@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  backend:
+    env_file:
+        "./backend/backend.env"
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+      target: base
+    image: "reeinvent/synonyms-backend"
+    container_name: synonyms-backend
+    volumes:
+      - ./backend:/app
+      - ./backend/nodemon.json:/app/nodemon.json
+      - backendv:/app/node_modules
+    ports:
+      - "5001:5000"
+    networks:
+      - synonyms-net
+  frontend:
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+      target: base
+    container_name: synonyms-frontend
+    image: "reeinvent/synonyms-frontend"
+    # environment:
+    #   - synonyms-backend-url=http://localhost:5000
+    volumes:
+      - ./client:/app
+      - frontendv:/app/node_modules
+    ports:
+      - "3000:3000"
+    networks:
+      - synonyms-net
+networks:
+  synonyms-net:
+    driver: bridge
+volumes:
+  backendv:
+  frontendv:
