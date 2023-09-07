@@ -6,7 +6,7 @@ export const addSynonyms = async (
 ): Promise<string[]> => {
   let synonymsGroupIdx: number = -1;
   let synonymsGroupIdxSet = new Set<number>();
-  for (const [index, word] of synonymsArr.entries()) {
+  for (const [_, word] of synonymsArr.entries()) {
     synonymsGroupIdx = getSynonymsGroupIdx(word);
     if (synonymsGroupIdx !== -1) {
       synonymsGroupIdxSet.add(synonymsGroupIdx);

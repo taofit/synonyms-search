@@ -33,7 +33,11 @@ app.post("/api/synonyms", async (req, res) => {
   res.send(synonymsStorage);
 });
 
-app.listen(5000, () => {
+app.get('/', async (req, res) => {
+  return res.status(200).json({message: 'synonyms server is started'})
+})
+
+const server = app.listen(5000, () => {
   console.log(`server running on port 5001 and see who can access`);
 });
 
@@ -47,3 +51,5 @@ process.on("uncaughtException", (err, origin) => {
 process.on("SIGTERM", (signal): void => {
   console.log(`Received ${signal}`);
 });
+
+export default server;
