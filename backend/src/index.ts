@@ -3,7 +3,11 @@ import process from "node:process";
 import bodyParser from "body-parser";
 import fs from "node:fs";
 import os from "os";
-import { addSynonyms, getSynonymsGroup } from "./services/services";
+import {
+  addSynonyms,
+  getSynonymsGroup,
+  getAllSynonyms,
+} from "./services/services";
 
 const app = express();
 // parse application/x-www-form-urlencoded
@@ -12,9 +16,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+app.get("/api/synonyms/all", async (req, res) => {
+  const synonymsStorage = await getAllSynonyms();
+  res.send(synonymsStorage);
+});
+
 app.get("/api/synonyms/", async (req, res) => {
   const synonymsGroup = await getSynonymsGroup(req.body.synonyms);
-  
+
   res.send(synonymsGroup);
 });
 
