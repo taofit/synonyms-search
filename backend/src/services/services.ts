@@ -5,8 +5,8 @@ export const addSynonyms = async (
   synonymsArr: Array<string>
 ): Promise<string[]> => {
   let synonymsGroupIdx: number = -1;
-  let synonymsGroupIdxSet = new Set<number>();
-  for (const [_, word] of synonymsArr.entries()) {
+  const synonymsGroupIdxSet = new Set<number>();
+  for (const word of synonymsArr.values()) {
     synonymsGroupIdx = getSynonymsGroupIdx(word);
     if (synonymsGroupIdx !== -1) {
       synonymsGroupIdxSet.add(synonymsGroupIdx);
