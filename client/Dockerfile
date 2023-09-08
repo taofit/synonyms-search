@@ -6,7 +6,7 @@ LABEL maintainer = ["tao_sun@hotmail.com"]
 
 WORKDIR /app
 
-COPY ["package.json", "package-lock.json", "./"]
+COPY ["package.json", "./"]
 
 RUN npm install 
 COPY . .
