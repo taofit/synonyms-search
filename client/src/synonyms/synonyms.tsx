@@ -1,22 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-export const GetSynonyms = () => {
-  return <h1>get some synonyms</h1>;
-};
-
-export const Addsynonyms = () => {
-  return <h1>add Synonyms</h1>;
-};
-
-export const NavBar = () => {
+export const Home = () => {
   return (
-    <div>
-      <ul>
-        <Link to="/">Home</Link>
-        <Link to="/getsynonyms">Get Synonyms</Link>
-        <Link to="/addsynonyms">Add Synonyms</Link>
-      </ul>
+    <div className="grid place-content-center bg-indigo-100 text-black">
+      <h1>Search & Add Synonyms</h1>
+    </div>
+  );
+};
+export const GetSynonyms = () => {
+  return (
+    <div className="grid place-content-center bg-indigo-100 text-black">
+      <h1>get some synonyms</h1>
     </div>
   );
 };
