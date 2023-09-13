@@ -1,11 +1,13 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
-import { GetSynonyms, Home } from "./synonyms/synonyms";
+import { Home } from "./synonyms/synonyms";
 import Addsynonyms from "./synonyms/addSynonyms";
+import GetSynonyms from "./synonyms/getSynonyms";
+import EditSynonyms from "./synonyms/editSynonyms";
 import Header from "./Header";
 
 function App() {
-  let activeClassName = "active px-1.5";
+  let activeClassName = "underline underline-offset-1 px-1.5";
   return (
     <div>
       <Header />
@@ -36,11 +38,20 @@ function App() {
             >
               Add Synonyms
             </NavLink>
+            <NavLink
+              to="editSynonyms"
+              className={({ isActive }) =>
+                isActive ? activeClassName : "px-1.5"
+              }
+            >
+              Edit/Remove Synonyms
+            </NavLink>
           </nav>
           <Routes>
             <Route path="" element={<Home />} />
             <Route path="getsynonyms" element={<GetSynonyms />} />
             <Route path="addsynonyms" element={<Addsynonyms />} />
+            <Route path="editSynonyms" element={<EditSynonyms />} />
           </Routes>
         </BrowserRouter>
       </div>

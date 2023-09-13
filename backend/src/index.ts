@@ -29,8 +29,10 @@ app.get("/api/synonyms/all", async (req, res) => {
   res.send(synonymsStorage);
 });
 
-app.get("/api/synonyms/", async (req, res) => {
-  const synonymsGroup = await getSynonymsGroup(req.body.synonyms);
+app.get("/api/synonyms", async (req, res) => {
+  let { search } = req.query;
+  search = String(search);
+  const synonymsGroup = await getSynonymsGroup(search);
 
   res.send(synonymsGroup);
 });

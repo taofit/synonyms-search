@@ -25,7 +25,7 @@ const AddSynonyms = () => {
   };
 
   const handleSubmit = async () => {
-    if (inputSynonyms.length === 0) {
+    if ([0, 1].includes(inputSynonyms.length)) {
       toast.error("No synonyms added");
       return;
     }
@@ -63,12 +63,12 @@ const AddSynonyms = () => {
                 onChange={(event) => handleChange(index, event)}
                 value={data}
                 name="synonyms"
-                className="from-orange-50 pb-px mx-1.5"
-                placeholder="synonyms"
+                className="placeholder:italic placeholder:text-slate-400 bg-white border border-slate-300 rounded-md py-2 px-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+                placeholder="enter a word"
               />
               {inputSynonyms.length !== 1 ? (
                 <button
-                  className="hover:rounded-lg text-red-600"
+                  className="hover:rounded-lg text-red-600 px-2"
                   onClick={() => removeSynonyms(index)}
                 >
                   x
