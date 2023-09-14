@@ -7,6 +7,7 @@ import {
   addSynonyms,
   getSynonymsGroup,
   getAllSynonyms,
+  editSynonyms,
 } from "./services/services";
 
 const app = express();
@@ -30,18 +31,31 @@ app.get("/api/synonyms/all", async (req, res) => {
 });
 
 app.get("/api/synonyms", async (req, res) => {
-  let { search } = req.query;
-  search = String(search);
-  const synonymsGroup = await getSynonymsGroup(search);
+  let { search: word } = req.query;
+  word = String(word);
+  const synonymsGroup = await getSynonymsGroup(word);
 
   res.send(synonymsGroup);
 });
 
-app.post("/api/synonyms", async (req, res) => {
-  console.log(req.body);
-  const synonymsStorage = await addSynonyms(req.body);
+app.post("/api/synonyms", async (req, res, next) => {
+  const { word } = req.body;
+  if (word === undefined) {
+    const synonymsStorage = await addSynonyms(req.body);
+    res.send(synonymsStorage);
+  } else {
+    next();
+  }
+});
 
-  res.send(synonymsStorage);
+app.post("/api/synonyms", async (req, res, next) => {
+  const word = req.body.word;
+  const synonymsList = req.body.synonymsList;
+  const result = await editSynonyms(word, synonymsList);
+  if (result.status === "error") {
+    res.status(400).json(result);
+  }
+  res.status(200).json(result);
 });
 
 app.get("/", async (req, res) => {

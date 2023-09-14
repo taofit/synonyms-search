@@ -3,31 +3,77 @@ let synonymsStorage: Array<synonymsGroup> = [];
 
 export const addSynonyms = async (
   synonymsArr: Array<string>
-): Promise<string[]> => {
-  let synonymsGroupIdx: number = -1;
+): Promise<{ status: string; msg: string }> => {
+  let synonymsGroupIdx: number;
   const synonymsGroupIdxSet = new Set<number>();
-  for (const word of synonymsArr.values()) {
+  for (const word of synonymsArr) {
     synonymsGroupIdx = getSynonymsGroupIdx(word);
     if (synonymsGroupIdx !== -1) {
       synonymsGroupIdxSet.add(synonymsGroupIdx);
     }
   }
   if (synonymsGroupIdxSet.size > 0) {
-    synonymsStorage = rearrangeSynonymsStorage(synonymsGroupIdxSet);
+    const newSynonymsGroup = getSynonymsInGroup(synonymsGroupIdxSet);
+    synonymsStorage = synonymsStorage.filter((_, i): boolean => {
+      return !synonymsGroupIdxSet.has(i);
+    });
+    synonymsStorage.push(newSynonymsGroup);
     const lastSynonymsGroupIdx = synonymsStorage.length - 1;
-    synonymsArr.forEach((word) => {
+    synonymsArr.forEach((word: string) => {
       synonymsStorage[lastSynonymsGroupIdx].add(word);
     });
-    console.log(synonymsStorage);
-    return Array.from(synonymsStorage[lastSynonymsGroupIdx]);
+
+    return {
+      status: "success",
+      msg: "successfully add synonyms",
+    };
   }
 
   const synonymsSet = new Set(synonymsArr);
   synonymsStorage.push(synonymsSet);
   const lastInsertedIdn = synonymsStorage.length - 1;
-  console.log(synonymsStorage);
 
-  return Array.from(synonymsStorage[lastInsertedIdn]);
+  return {
+    status: "success",
+    msg: "successfully add synonyms",
+  };
+};
+
+export const editSynonyms = async (
+  word: string,
+  synonymsList: Array<string>
+) => {
+  const baseWordSynonymsGroupIdx = getSynonymsGroupIdx(word);
+  if (baseWordSynonymsGroupIdx === -1) {
+    return { status: "error", msg: `word:"${word}" not found in the system` };
+  }
+  const synonymsGroup = new Set<string>();
+  for (const w of synonymsList) {
+    synonymsGroup.add(w);
+  }
+  synonymsGroup.add(word);
+
+  const synonymsOtherGroupIdxSet = new Set<number>();
+  for (const word of synonymsGroup) {
+    const groupIdx = getSynonymsGroupIdx(word);
+    if (isWordFromOtherGroup(baseWordSynonymsGroupIdx, groupIdx)) {
+      synonymsOtherGroupIdxSet.add(groupIdx);
+    }
+  }
+
+  const newSynonymsGroup = getSynonymsInGroup(synonymsOtherGroupIdxSet);
+  synonymsStorage[baseWordSynonymsGroupIdx] = new Set([
+    ...synonymsGroup,
+    ...newSynonymsGroup,
+  ]);
+  synonymsStorage = synonymsStorage.filter((_, i): boolean => {
+    return !synonymsOtherGroupIdxSet.has(i);
+  });
+
+  return {
+    status: "success",
+    msg: `successfully update synonyms for word: "${word}"`,
+  };
 };
 
 export const getSynonymsGroup = async (word: string) => {
@@ -48,24 +94,28 @@ function getSynonymsGroupIdx(word: string): number {
 
   return -1;
 }
-// put synonyms words in current synonyms storage in the same group
-function rearrangeSynonymsStorage(
-  synonymsGroupIdxSet: Set<number>
-): Array<synonymsGroup> {
+
+function isWordFromOtherGroup(
+  baseWordSynonymsGroupIdx: number,
+  groupIdx: number
+): boolean {
+  if (groupIdx !== -1 && groupIdx !== baseWordSynonymsGroupIdx) {
+    return true;
+  }
+  return false;
+}
+
+function getSynonymsInGroup(synonymsGroupIdxSet: Set<number>): Set<string> {
   const synonymsGroupIdxArr = Array.from(synonymsGroupIdxSet);
   const emptySet = new Set<string>();
   const newSynonymsGroup = synonymsGroupIdxArr.reduce(
-    (accSet: Set<string>, cur: number) => {
+    (accSet: Set<string>, cur: number): Set<string> => {
       return new Set([...synonymsStorage[cur], ...accSet]);
     },
     emptySet
   );
-  synonymsStorage = synonymsStorage.filter((_, i) => {
-    return !synonymsGroupIdxArr.includes(i);
-  });
-  synonymsStorage.push(newSynonymsGroup);
 
-  return synonymsStorage;
+  return newSynonymsGroup;
 }
 
 export const getAllSynonyms = async () => {
