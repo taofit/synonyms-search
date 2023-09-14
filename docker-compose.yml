@@ -25,8 +25,6 @@ services:
       target: base
     image: "reeinvent/synonyms-frontend"
     container_name: synonyms-frontend
-    # environment:
-    #   - synonyms-backend-url=http://localhost:5000
     volumes:
       - ./client:/app
       - frontendv:/app/node_modules

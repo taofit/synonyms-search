@@ -33,8 +33,7 @@ const GetSynonyms = () => {
       toast.error("error sent the synonyms to the backend");
       return;
     }
-    // const content = rawResponse.json();
-    toast.success("Successfully sent synonyms to the backend");
+
     let oriSynonymsList = await rawResponse.json();
     if (oriSynonymsList.length === 0 || oriSynonymsList.length === 1) {
       toast((t) => "There is no synonyms for " + baseSynonyms);
@@ -46,8 +45,8 @@ const GetSynonyms = () => {
   };
 
   return (
-    <div className="grid place-content-center bg-indigo-100 text-black">
-      <div className="row-auto">
+    <div className="grid pb-6 place-content-center bg-indigo-100 text-black">
+      <div>
         <div className="py-2">
           <label className="relative block">
             <span className="sr-only">Search</span>

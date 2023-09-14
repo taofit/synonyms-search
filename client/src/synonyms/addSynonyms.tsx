@@ -53,8 +53,8 @@ const AddSynonyms = () => {
   };
 
   return (
-    <div className="grid place-content-center bg-indigo-100 text-black">
-      <div className="row-auto">
+    <div className="grid pb-6 place-content-center bg-indigo-100 text-black">
+      <div>
         {inputSynonyms.map((data, index) => {
           return (
             <div className="row-span-1 py-2" key={index}>

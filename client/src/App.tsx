@@ -13,7 +13,7 @@ function App() {
       <Header />
       <div className="place-content-center bg-indigo-200 text-blue-900">
         <BrowserRouter>
-          <nav className="text-center">
+          <nav className="text-center py-2">
             <NavLink
               to=""
               className={({ isActive }) =>
@@ -44,7 +44,7 @@ function App() {
                 isActive ? activeClassName : "px-1.5"
               }
             >
-              Edit/Remove Synonyms
+              Edit Synonyms
             </NavLink>
           </nav>
           <Routes>

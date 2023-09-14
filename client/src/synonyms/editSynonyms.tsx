@@ -5,6 +5,10 @@ const EditSynonyms = () => {
   const [baseWord, setBaseWord] = useState("");
   const [synonymsList, setSynonymsList] = useState<string[]>([]);
 
+  const addSynonyms = () => {
+    setSynonymsList([...synonymsList, ""]);
+  };
+
   const removeSynonyms = (index: number) => {
     const rows = [...synonymsList];
     rows.splice(index, 1);
@@ -49,8 +53,7 @@ const EditSynonyms = () => {
       toast.error("error sent the synonyms to the backend");
       return;
     }
-    // const content = rawResponse.json();
-    toast.success("Successfully sent synonyms to the backend");
+
     let oriSynonymsList = await rawResponse.json();
     if (oriSynonymsList.length === 0 || oriSynonymsList.length === 1) {
       toast((t) => "There is no synonyms for " + baseWord);
@@ -62,7 +65,7 @@ const EditSynonyms = () => {
   };
 
   const handleSaveSubmit = async () => {
-    if ([0, 1].includes(synonymsList.length)) {
+    if (synonymsList.length === 0) {
       toast.error("No synonyms added");
       return;
     }
@@ -79,18 +82,19 @@ const EditSynonyms = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(synonymsList),
+      body: JSON.stringify({ word: baseWord, synonymsList }),
     });
+    const { msg } = await rawResponse.json();
     if (!rawResponse.ok) {
-      toast.error("error sent the synonyms to the backend");
+      toast.error("Error: " + msg);
       return;
     }
-    toast.success("Successfully sent synonyms to the backend");
+    toast.success(msg);
   };
 
   return (
-    <div className="grid place-content-center bg-indigo-100 text-black">
-      <div className="row-auto">
+    <div className="grid pb-6 place-content-center bg-indigo-100 text-black">
+      <div>
         <div className="py-2">
           <label className="relative block">
             <span className="sr-only">Search</span>
@@ -146,16 +150,22 @@ const EditSynonyms = () => {
           ))}
         </div>
         <button
-          className="mr-3 inline-block border-solid border-black border rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-black hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          className="inline-block border-solid border-black border rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-black hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          onClick={addSynonyms}
+        >
+          Add New
+        </button>
+        <button
+          className="mx-3 inline-block border-solid border-black border rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-black hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
           onClick={handleSearchSubmit}
         >
-          search
+          Search
         </button>
         <button
           className="inline-block border-solid border-black border rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-black hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
           onClick={handleSaveSubmit}
         >
-          save
+          Save
         </button>
       </div>
       <Toaster position="top-right" />
