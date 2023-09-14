@@ -1,10 +1,12 @@
 type synonymsGroup = Set<string>;
+//each synonymsGroup stores a group of synonyms words
 let synonymsStorage: Array<synonymsGroup> = [];
 
 export const addSynonyms = async (
   synonymsArr: Array<string>
 ): Promise<{ status: string; msg: string }> => {
   let synonymsGroupIdx: number;
+  //synonymsGroupIdxSet stores all the index of synonymsGroup that contain the synonyms word sent from client
   const synonymsGroupIdxSet = new Set<number>();
   for (const word of synonymsArr) {
     synonymsGroupIdx = getSynonymsGroupIdx(word);
@@ -12,6 +14,7 @@ export const addSynonyms = async (
       synonymsGroupIdxSet.add(synonymsGroupIdx);
     }
   }
+  //which means some synonyms words sent from client exist in the backend 
   if (synonymsGroupIdxSet.size > 0) {
     const newSynonymsGroup = getSynonymsInGroup(synonymsGroupIdxSet);
     synonymsStorage = synonymsStorage.filter((_, i): boolean => {
