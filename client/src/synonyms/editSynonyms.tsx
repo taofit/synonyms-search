@@ -82,7 +82,7 @@ const EditSynonyms = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ word: baseWord, synonymsList }),
+      body: JSON.stringify({ word: baseWord, synonymsList: synonymsList.map((w) => w.trim()) }),
     });
     const { msg } = await rawResponse.json();
     if (!rawResponse.ok) {

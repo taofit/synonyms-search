@@ -42,13 +42,12 @@ const AddSynonyms = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(inputSynonyms),
+      body: JSON.stringify(inputSynonyms.map((w) => w.trim())),
     });
     if (!rawResponse.ok) {
       toast.error("error sent the synonyms to the backend");
       return;
     }
-    // const content = rawResponse.json();
     toast.success("Successfully sent synonyms to the backend");
   };
 
