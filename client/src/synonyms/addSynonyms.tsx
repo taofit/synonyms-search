@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { BASE_URL } from "./synonyms";
 
 const AddSynonyms = () => {
   const [inputSynonyms, setInputSynonyms] = useState([""]);
@@ -36,7 +37,14 @@ const AddSynonyms = () => {
       toast.error("Synonyms has empty value");
       return;
     }
-    const rawResponse = await fetch("http://localhost:5001/api/synonyms", {
+    const duplicateElms = inputSynonyms.filter(
+      (item: string, index: number) => inputSynonyms.indexOf(item) !== index
+    );
+    if (duplicateElms.length > 0) {
+      toast.error("Synonyms contain same words");
+      return;
+    }
+    const rawResponse = await fetch(`${BASE_URL}/api/synonyms`, {
       method: "POST",
       mode: "cors",
       headers: {
