@@ -40,11 +40,13 @@ app.get("/api/synonyms", async (req, res) => {
 
 app.post("/api/synonyms", async (req, res, next) => {
   const { word } = req.body;
-  if (word === undefined) {
+  if (typeof word !== "undefined") {
+    next();
+  } else if (Array.isArray(req.body)) {
     const synonymsStorage = await addSynonyms(req.body);
     res.send(synonymsStorage);
   } else {
-    next();
+    res.status(400).json({ msg: "error wrong post body" });
   }
 });
 
