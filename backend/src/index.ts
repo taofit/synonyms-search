@@ -44,6 +44,9 @@ app.post("/api/synonyms", async (req, res, next) => {
     next();
   } else if (Array.isArray(req.body)) {
     const synonymsStorage = await addSynonyms(req.body);
+    if (synonymsStorage.status === "error") {
+      res.status(400).json({ msg: synonymsStorage.msg });
+    }
     res.send(synonymsStorage);
   } else {
     res.status(400).json({ msg: "error wrong post body" });

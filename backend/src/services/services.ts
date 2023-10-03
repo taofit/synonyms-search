@@ -5,6 +5,13 @@ let synonymsStorage: Array<synonymsGroup> = [];
 export const addSynonyms = async (
   synonymsArr: Array<string>
 ): Promise<{ status: string; msg: string }> => {
+  const synonymsSet = new Set(synonymsArr);
+  if (synonymsSet.size <= 1) {
+    return {
+      status: "error",
+      msg: "there is no synonyms sent",
+    };
+  }
   let synonymsGroupIdx: number;
   //synonymsGroupIdxSet stores all the index of synonymsGroup that contain the synonyms word sent from client
   const synonymsGroupIdxSet = new Set<number>();
@@ -14,7 +21,7 @@ export const addSynonyms = async (
       synonymsGroupIdxSet.add(synonymsGroupIdx);
     }
   }
-  //which means some synonyms words sent from client exist in the backend 
+  //which means some synonyms words sent from client exist in the backend
   if (synonymsGroupIdxSet.size > 0) {
     const newSynonymsGroup = getSynonymsInGroup(synonymsGroupIdxSet);
     synonymsStorage = synonymsStorage.filter((_, i): boolean => {
@@ -32,7 +39,6 @@ export const addSynonyms = async (
     };
   }
 
-  const synonymsSet = new Set(synonymsArr);
   synonymsStorage.push(synonymsSet);
   const lastInsertedIdn = synonymsStorage.length - 1;
 
@@ -49,6 +55,13 @@ export const editSynonyms = async (
   const baseWordSynonymsGroupIdx = getSynonymsGroupIdx(word);
   if (baseWordSynonymsGroupIdx === -1) {
     return { status: "error", msg: `word:"${word}" not found in the system` };
+  }
+  if (typeof synonymsList === "undefined") {
+    return { status: "error", msg: "no synonymsList is sent" };
+  }
+  const synonymsSet = new Set(synonymsList);
+  if (synonymsSet.size === 0) {
+    return { status: "error", msg: "synonymsList contains no word" };
   }
   const synonymsGroup = new Set<string>();
   for (const w of synonymsList) {
